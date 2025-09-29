@@ -7,6 +7,19 @@ using ClearBank.DeveloperTest.Factories;
 
 namespace ClearBank.DeveloperTest.Services;
 
+public class BaCsStrategy
+{
+    public MakePaymentResult MakePayment(Account account, MakePaymentRequest request)
+    {
+        if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
+        {
+            return new MakePaymentResult();
+        }
+
+        return new MakePaymentResult { Success = true };
+    }
+}
+
 public class PaymentService : IPaymentService
 {
     private readonly PaymentConfiguration _paymentConfiguration;
@@ -51,11 +64,13 @@ public class PaymentService : IPaymentService
         switch (request.PaymentScheme) // TODO: Factory create specific type (strategy)
         {
             case PaymentScheme.Bacs:
-                if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
-                {
-                    result.Success = false;
-                }
+                result = new BaCsStrategy().MakePayment(account, request);
                 break;
+                // if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
+                // {
+                //     result.Success = false;
+                // }
+                // break;
 
             case PaymentScheme.FasterPayments:
                 if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
