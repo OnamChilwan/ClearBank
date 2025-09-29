@@ -2,8 +2,10 @@
 
 namespace ClearBank.DeveloperTest.Strategies;
 
-public class BACsStrategy
+public class BACsStrategy : IPaymentStrategy
 {
+    public PaymentScheme SupportedScheme => PaymentScheme.Bacs;
+
     public MakePaymentResult MakePayment(Account account, MakePaymentRequest request)
     {
         if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))

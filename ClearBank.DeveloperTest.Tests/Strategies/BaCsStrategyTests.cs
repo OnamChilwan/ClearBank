@@ -7,13 +7,14 @@ namespace ClearBank.DeveloperTest.Tests.Strategies;
 
 public class BaCsStrategyTests
 {
-    private readonly BACsStrategy _subject;
+    private readonly BACsStrategy _subject = new();
 
-    public BaCsStrategyTests()
+    [Test]
+    public void Strategy_Should_Support_Bacs()
     {
-        _subject = new BACsStrategy();
+        _subject.SupportedScheme.Should().Be(PaymentScheme.Bacs); 
     }
-
+    
     [Test]
     public void Given_Account_Supports_BaCs_Then_Successful_Result_Is_Returned()
     {
