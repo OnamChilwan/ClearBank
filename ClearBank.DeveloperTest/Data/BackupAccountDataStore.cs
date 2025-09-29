@@ -4,6 +4,8 @@ namespace ClearBank.DeveloperTest.Data;
 
 public class BackupAccountDataStore : IAccountDataStore
 {
+    public DataStoreType SupportedDataStoreType => DataStoreType.Backup;
+
     public Account GetAccount(string accountNumber)
     {
         // Access backup data base to retrieve account, code removed for brevity 
