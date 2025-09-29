@@ -52,7 +52,7 @@ public class PaymentService : IPaymentService
         switch (request.PaymentScheme) // TODO: Factory create specific type (strategy)
         {
             case PaymentScheme.Bacs:
-                result = new BaCsStrategy().MakePayment(account, request);
+                result = new BACsStrategy().MakePayment(account, request);
                 break;
 
             case PaymentScheme.FasterPayments:

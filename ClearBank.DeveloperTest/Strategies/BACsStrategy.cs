@@ -2,7 +2,7 @@
 
 namespace ClearBank.DeveloperTest.Strategies;
 
-public class BaCsStrategy
+public class BACsStrategy
 {
     public MakePaymentResult MakePayment(Account account, MakePaymentRequest request)
     {

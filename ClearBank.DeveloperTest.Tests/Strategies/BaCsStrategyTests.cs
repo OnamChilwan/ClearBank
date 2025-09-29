@@ -7,11 +7,11 @@ namespace ClearBank.DeveloperTest.Tests.Strategies;
 
 public class BaCsStrategyTests
 {
-    private readonly BaCsStrategy _subject;
+    private readonly BACsStrategy _subject;
 
     public BaCsStrategyTests()
     {
-        _subject = new BaCsStrategy();
+        _subject = new BACsStrategy();
     }
 
     [Test]
