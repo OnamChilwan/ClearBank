@@ -4,21 +4,9 @@ using ClearBank.DeveloperTest.Types;
 using System.Configuration;
 using ClearBank.DeveloperTest.Configuration;
 using ClearBank.DeveloperTest.Factories;
+using ClearBank.DeveloperTest.Strategies;
 
 namespace ClearBank.DeveloperTest.Services;
-
-public class BaCsStrategy
-{
-    public MakePaymentResult MakePayment(Account account, MakePaymentRequest request)
-    {
-        if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
-        {
-            return new MakePaymentResult();
-        }
-
-        return new MakePaymentResult { Success = true };
-    }
-}
 
 public class PaymentService : IPaymentService
 {
@@ -66,11 +54,6 @@ public class PaymentService : IPaymentService
             case PaymentScheme.Bacs:
                 result = new BaCsStrategy().MakePayment(account, request);
                 break;
-                // if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
-                // {
-                //     result.Success = false;
-                // }
-                // break;
 
             case PaymentScheme.FasterPayments:
                 if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
