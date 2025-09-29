@@ -41,6 +41,11 @@ public class PaymentService : IPaymentService
 
         Account account = dataStore.GetAccount(request.DebtorAccountNumber);
 
+        if (account == null)
+        {
+            return new MakePaymentResult();
+        }
+
         var result = new MakePaymentResult();
 
         result.Success = true;
@@ -48,22 +53,14 @@ public class PaymentService : IPaymentService
         switch (request.PaymentScheme) // TODO: Factory create specific type (strategy)
         {
             case PaymentScheme.Bacs:
-                if (account == null)
-                {
-                    result.Success = false;
-                }
-                else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
+                if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
                 {
                     result.Success = false;
                 }
                 break;
 
             case PaymentScheme.FasterPayments:
-                if (account == null)
-                {
-                    result.Success = false;
-                }
-                else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
+                if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
                 {
                     result.Success = false;
                 }
@@ -74,11 +71,7 @@ public class PaymentService : IPaymentService
                 break;
 
             case PaymentScheme.Chaps:
-                if (account == null)
-                {
-                    result.Success = false;
-                }
-                else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Chaps))
+                if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Chaps))
                 {
                     result.Success = false;
                 }
