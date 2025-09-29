@@ -39,4 +39,19 @@ public class PaymentServiceTests
     
         result.Success.Should().BeFalse();
     }
+    
+    [Test]
+    public void Given_Account_Exists_But_Does_Not_Allow_BACs_When_Making_BACs_Payment_Then_Unsuccessful_Response_Is_Returned()
+    {
+        var request = new MakePaymentRequest { DebtorAccountNumber = "123", PaymentScheme = PaymentScheme.Bacs };
+        var account = new Account { AllowedPaymentSchemes = AllowedPaymentSchemes.Chaps };
+    
+        _accountStore
+            .GetAccount(request.DebtorAccountNumber)
+            .Returns(account);
+    
+        var result = _subject.MakePayment(request);
+        
+        result.Success.Should().BeFalse();
+    }
 }

@@ -37,19 +37,9 @@ public class PaymentService : IPaymentService
     public MakePaymentResult MakePayment(MakePaymentRequest request)
     {
         var dataStoreType = _paymentConfiguration.DataStoreType;
+        var dataStore = _dataStoreFactory.Get(dataStoreType);
 
-        Account account = null;
-
-        if (dataStoreType == "Backup") // TODO: Factory or Decorator
-        {
-            var accountDataStore = new BackupAccountDataStore(); // TODO: inject this in, create an interface
-            account = accountDataStore.GetAccount(request.DebtorAccountNumber);
-        }
-        else
-        {
-            var accountDataStore = new AccountDataStore(); // TODO: inject this in, create an interface
-            account = accountDataStore.GetAccount(request.DebtorAccountNumber);
-        }
+        Account account = dataStore.GetAccount(request.DebtorAccountNumber);
 
         var result = new MakePaymentResult();
 
