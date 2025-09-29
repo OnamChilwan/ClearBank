@@ -92,17 +92,7 @@ public class PaymentService : IPaymentService
         if (result.Success)
         {
             account.Balance -= request.Amount;
-
-            if (dataStoreType == "Backup") // TODO: Duplicated code
-            {
-                var accountDataStore = new BackupAccountDataStore();
-                accountDataStore.UpdateAccount(account);
-            }
-            else
-            {
-                var accountDataStore = new AccountDataStore();
-                accountDataStore.UpdateAccount(account);
-            }
+            dataStore.UpdateAccount(account);
         }
 
         return result;
