@@ -1,17 +1,23 @@
-﻿using ClearBank.DeveloperTest.Data;
+﻿using System.Collections.Generic;
+using ClearBank.DeveloperTest.Data;
 using ClearBank.DeveloperTest.Types;
 using System.Configuration;
 using ClearBank.DeveloperTest.Configuration;
+using ClearBank.DeveloperTest.Factories;
 
 namespace ClearBank.DeveloperTest.Services;
 
 public class PaymentService : IPaymentService
 {
     private readonly PaymentConfiguration _paymentConfiguration;
+    private readonly IDataStoreFactory _dataStoreFactory;
 
-    public PaymentService(PaymentConfiguration paymentConfiguration)
+    public PaymentService(
+        PaymentConfiguration paymentConfiguration,
+        IDataStoreFactory dataStoreFactory)
     {
         _paymentConfiguration = paymentConfiguration;
+        _dataStoreFactory = dataStoreFactory;
     }
 
     public PaymentService() // Maintains backwards compatibility
@@ -20,6 +26,12 @@ public class PaymentService : IPaymentService
         {
             DataStoreType = ConfigurationManager.AppSettings["DataStoreType"]
         };
+        
+        _dataStoreFactory = new DataStoreFactory(new List<IAccountDataStore>
+        {
+            new AccountDataStore(), 
+            new BackupAccountDataStore()
+        });
     }
     
     public MakePaymentResult MakePayment(MakePaymentRequest request)

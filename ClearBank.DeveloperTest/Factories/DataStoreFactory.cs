@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ClearBank.DeveloperTest.Data;
 
-namespace ClearBank.DeveloperTest.Tests.Factories;
+namespace ClearBank.DeveloperTest.Factories;
 
 public class DataStoreFactory(IEnumerable<IAccountDataStore> accountDataStores) : IDataStoreFactory
 {
