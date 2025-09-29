@@ -43,12 +43,10 @@ public class PaymentService : IPaymentService
 
         if (account == null)
         {
-            return new MakePaymentResult();
+            return MakePaymentResult.Unsuccessful();
         }
 
-        var result = new MakePaymentResult();
-
-        result.Success = true;
+        var result = MakePaymentResult.Successful();
             
         switch (request.PaymentScheme) // TODO: Factory create specific type (strategy)
         {
