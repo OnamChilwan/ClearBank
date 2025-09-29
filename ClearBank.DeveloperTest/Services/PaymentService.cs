@@ -56,14 +56,7 @@ public class PaymentService : IPaymentService
                 break;
 
             case PaymentScheme.FasterPayments:
-                if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
-                {
-                    result.Success = false;
-                }
-                else if (account.Balance < request.Amount)
-                {
-                    result.Success = false;
-                }
+                result = new FasterPaymentStrategy().MakePayment(account, request);
                 break;
 
             case PaymentScheme.Chaps:
