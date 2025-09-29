@@ -8,18 +8,18 @@ namespace ClearBank.DeveloperTest.Services
     {
         public MakePaymentResult MakePayment(MakePaymentRequest request)
         {
-            var dataStoreType = ConfigurationManager.AppSettings["DataStoreType"];
+            var dataStoreType = ConfigurationManager.AppSettings["DataStoreType"]; // TODO: Inject this in
 
             Account account = null;
 
-            if (dataStoreType == "Backup")
+            if (dataStoreType == "Backup") // TODO: Factory or Decorator
             {
-                var accountDataStore = new BackupAccountDataStore();
+                var accountDataStore = new BackupAccountDataStore(); // TODO: inject this in, create an interface
                 account = accountDataStore.GetAccount(request.DebtorAccountNumber);
             }
             else
             {
-                var accountDataStore = new AccountDataStore();
+                var accountDataStore = new AccountDataStore(); // TODO: inject this in, create an interface
                 account = accountDataStore.GetAccount(request.DebtorAccountNumber);
             }
 
@@ -27,7 +27,7 @@ namespace ClearBank.DeveloperTest.Services
 
             result.Success = true;
             
-            switch (request.PaymentScheme)
+            switch (request.PaymentScheme) // TODO: Factory create specific type (strategy)
             {
                 case PaymentScheme.Bacs:
                     if (account == null)
@@ -75,7 +75,7 @@ namespace ClearBank.DeveloperTest.Services
             {
                 account.Balance -= request.Amount;
 
-                if (dataStoreType == "Backup")
+                if (dataStoreType == "Backup") // TODO: Duplicated code
                 {
                     var accountDataStore = new BackupAccountDataStore();
                     accountDataStore.UpdateAccount(account);
