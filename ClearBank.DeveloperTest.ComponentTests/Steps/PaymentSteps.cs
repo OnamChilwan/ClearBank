@@ -2,6 +2,7 @@
 using ClearBank.DeveloperTest.Data;
 using ClearBank.DeveloperTest.Factories;
 using ClearBank.DeveloperTest.Services;
+using ClearBank.DeveloperTest.Strategies;
 using ClearBank.DeveloperTest.Types;
 using FluentAssertions;
 using NSubstitute;
@@ -22,7 +23,13 @@ public class PaymentSteps
         
         _paymentService = new PaymentService(
             new PaymentConfiguration { DataStoreType = string.Empty },
-            new DataStoreFactory([ _accountDataStore ]));
+            new DataStoreFactory([ _accountDataStore ]), 
+            new PaymentStrategyFactory(new List<IPaymentStrategy>
+            {
+                new BACsStrategy(),
+                new FasterPaymentStrategy(),
+                new ChapsPaymentStrategy()
+            }));
     }
     
     public void AccountExists(Account account)

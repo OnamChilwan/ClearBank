@@ -12,13 +12,16 @@ public class PaymentService : IPaymentService
 {
     private readonly PaymentConfiguration _paymentConfiguration;
     private readonly IDataStoreFactory _dataStoreFactory;
+    private readonly IPaymentStrategyFactory _paymentStrategyFactory;
 
     public PaymentService(
         PaymentConfiguration paymentConfiguration,
-        IDataStoreFactory dataStoreFactory)
+        IDataStoreFactory dataStoreFactory,
+        IPaymentStrategyFactory paymentStrategyFactory)
     {
         _paymentConfiguration = paymentConfiguration;
         _dataStoreFactory = dataStoreFactory;
+        _paymentStrategyFactory = paymentStrategyFactory;
     }
 
     public PaymentService() // Maintains backwards compatibility
@@ -32,6 +35,13 @@ public class PaymentService : IPaymentService
         {
             new AccountDataStore(), 
             new BackupAccountDataStore()
+        });
+        
+        _paymentStrategyFactory = new PaymentStrategyFactory(new List<IPaymentStrategy>
+        {
+            new BACsStrategy(),
+            new FasterPaymentStrategy(),
+            new ChapsPaymentStrategy()
         });
     }
     

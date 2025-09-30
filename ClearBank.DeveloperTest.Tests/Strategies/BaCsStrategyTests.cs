@@ -16,16 +16,18 @@ public class BaCsStrategyTests
     }
     
     [Test]
-    public void Given_Account_Supports_BaCs_Then_Successful_Result_Is_Returned()
+    public void Given_Account_Supports_Bacs_Then_Successful_Result_Is_Returned()
     {
-        var result = _subject.MakePayment(new Account { AllowedPaymentSchemes = AllowedPaymentSchemes.Bacs }, new MakePaymentRequest());
+        var result = _subject.MakePayment(
+            new Account { AllowedPaymentSchemes = AllowedPaymentSchemes.Bacs }, 
+            new MakePaymentRequest { PaymentScheme = PaymentScheme.Bacs });
 
         result.Success.Should().BeTrue();
     }
     
     [TestCase(AllowedPaymentSchemes.Chaps)]
     [TestCase(AllowedPaymentSchemes.FasterPayments)]
-    public void Given_Account_Supports_BaCs_Then_Successful_Result_Is_Returned(AllowedPaymentSchemes scheme)
+    public void Given_Account_Supports_Bacs_Then_Unsuccessful_Result_Is_Returned(AllowedPaymentSchemes scheme)
     {
         var result = _subject.MakePayment(new Account { AllowedPaymentSchemes = scheme }, new MakePaymentRequest());
 
