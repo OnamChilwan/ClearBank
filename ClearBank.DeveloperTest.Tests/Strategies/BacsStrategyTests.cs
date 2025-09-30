@@ -7,8 +7,14 @@ namespace ClearBank.DeveloperTest.Tests.Strategies;
 
 public class BacsStrategyTests
 {
-    private readonly BacsStrategy _subject = new();
+    private BacsStrategy _subject = new();
 
+    [SetUp]
+    public void Setup()
+    {
+        _subject = new BacsStrategy();
+    }
+    
     [Test]
     public void Strategy_Should_Support_Bacs()
     {

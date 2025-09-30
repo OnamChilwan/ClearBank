@@ -6,7 +6,13 @@ namespace ClearBank.DeveloperTest.ComponentTests.Fixtures;
 
 public class PaymentTests
 {
-    private readonly PaymentSteps _steps = new();
+    private PaymentSteps _steps = new();
+
+    [SetUp]
+    public void Setup()
+    {
+        _steps = new PaymentSteps();
+    }
     
     [TestCase(PaymentScheme.Chaps, AllowedPaymentSchemes.Chaps)]
     [TestCase(PaymentScheme.Bacs, AllowedPaymentSchemes.Bacs)]

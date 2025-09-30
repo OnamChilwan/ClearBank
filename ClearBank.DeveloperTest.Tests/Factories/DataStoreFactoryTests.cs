@@ -10,7 +10,7 @@ public class DataStoreFactoryTests
 {
     private readonly IAccountDataStore _accountDataStore = Substitute.For<IAccountDataStore>();
     private readonly IAccountDataStore _backupAccountDataStore = Substitute.For<IAccountDataStore>();
-    private readonly DataStoreFactory _subject;
+    private DataStoreFactory _subject;
 
     public DataStoreFactoryTests()
     {
@@ -21,8 +21,12 @@ public class DataStoreFactoryTests
         _accountDataStore
             .SupportedDataStoreType
             .Returns(DataStoreType.Account);
+    }
 
-        _subject = new DataStoreFactory([_accountDataStore, _backupAccountDataStore]);
+    [SetUp]
+    public void Setup()
+    {
+        _subject = new DataStoreFactory([_accountDataStore, _backupAccountDataStore]); 
     }
 
     [TestCase("Backup")]

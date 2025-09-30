@@ -12,9 +12,10 @@ public class PaymentStrategyFactoryTests
 {
     private readonly IPaymentStrategy _strategyA = Substitute.For<IPaymentStrategy>();
     private readonly IPaymentStrategy _strategyB = Substitute.For<IPaymentStrategy>();
-    private readonly PaymentStrategyFactory _subject;
+    private PaymentStrategyFactory _subject;
 
-    public PaymentStrategyFactoryTests()
+    [SetUp]
+    public void Setup()
     {
         _strategyA.SupportedScheme.Returns(PaymentScheme.Bacs);
         _strategyB.SupportedScheme.Returns(PaymentScheme.Chaps);
@@ -22,9 +23,9 @@ public class PaymentStrategyFactoryTests
         {
             _strategyA,
             _strategyB
-        });        
+        });    
     }
-    
+
     [Test]
     public void Given_Strategy_Is_Registered_When_Retrieving_Then_Strategy_Is_Returned()
     {
@@ -38,5 +39,14 @@ public class PaymentStrategyFactoryTests
     {
         var exception = Assert.Throws<NotSupportedException>(() => _subject.Get(PaymentScheme.FasterPayments));
         exception!.Message.Should().Be("No strategy found for payment scheme: FasterPayments");       
+    }
+
+    [Test]
+    public void Given_Multiple_Strategies_Are_Registered_For_Same_Scheme_Then_Exception_Is_Thrown()
+    {
+        _strategyA.SupportedScheme.Returns(PaymentScheme.Bacs);
+        _strategyB.SupportedScheme.Returns(PaymentScheme.Bacs);
+
+        Assert.Throws<InvalidOperationException>(() => _subject.Get(PaymentScheme.Bacs));
     }
 }

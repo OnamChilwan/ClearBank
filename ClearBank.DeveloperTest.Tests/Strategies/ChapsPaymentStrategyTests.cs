@@ -7,8 +7,13 @@ namespace ClearBank.DeveloperTest.Tests.Strategies;
 
 public class ChapsPaymentStrategyTests
 {
-    private readonly ChapsPaymentStrategy _subject = new();
+    private ChapsPaymentStrategy _subject = new();
 
+    public void Setup()
+    {
+        _subject = new ChapsPaymentStrategy();
+    }
+    
     [Test]
     public void Strategy_Should_Support_Chaps()
     {

@@ -7,8 +7,14 @@ namespace ClearBank.DeveloperTest.Tests.Strategies;
 
 public class FasterPaymentStrategyTests
 {
-    private readonly FasterPaymentStrategy _subject = new();
+    private FasterPaymentStrategy _subject = new();
 
+    [SetUp]
+    public void Setup()
+    {
+        _subject = new FasterPaymentStrategy();
+    }
+    
     [Test]
     public void Strategy_Should_Support_FasterPayments()
     {

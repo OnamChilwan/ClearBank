@@ -13,21 +13,21 @@ namespace ClearBank.DeveloperTest.Tests.Services;
 
 public class PaymentServiceTests
 {
-    private readonly PaymentService _subject;
+    private const string DataStoreType = "data_store";
     private readonly IAccountDataStore _accountStore = Substitute.For<IAccountDataStore>();
     private readonly IDataStoreFactory _dataStoreFactory = Substitute.For<IDataStoreFactory>();
     private readonly IPaymentStrategyFactory _paymentStrategyFactory = Substitute.For<IPaymentStrategyFactory>();
+    private PaymentService _subject;
 
-    public PaymentServiceTests()
+    [SetUp]
+    public void Setup()
     {
-        const string dataStoreType = "data_store";
-        
         _dataStoreFactory
-            .Get(dataStoreType)
+            .Get(DataStoreType)
             .Returns(_accountStore);
-
+        
         _subject = new PaymentService(
-            new PaymentConfiguration { DataStoreType = dataStoreType },
+            new PaymentConfiguration { DataStoreType = DataStoreType },
             _dataStoreFactory,
             _paymentStrategyFactory);
     }

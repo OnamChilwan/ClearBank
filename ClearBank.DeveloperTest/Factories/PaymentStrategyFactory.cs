@@ -10,7 +10,7 @@ public class PaymentStrategyFactory(IEnumerable<IPaymentStrategy> paymentStrateg
 {
     public IPaymentStrategy Get(PaymentScheme scheme)
     {
-        var strategy = paymentStrategies.FirstOrDefault(x => x.SupportedScheme == scheme);
+        var strategy = paymentStrategies.SingleOrDefault(x => x.SupportedScheme == scheme);
         return strategy ?? throw new NotSupportedException($"No strategy found for payment scheme: {scheme}");
     }
 }
