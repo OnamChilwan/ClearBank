@@ -26,7 +26,7 @@ public class PaymentSteps
             new DataStoreFactory([ _accountDataStore ]), 
             new PaymentStrategyFactory(new List<IPaymentStrategy>
             {
-                new BACsStrategy(),
+                new BacsStrategy(),
                 new FasterPaymentStrategy(),
                 new ChapsPaymentStrategy()
             }));

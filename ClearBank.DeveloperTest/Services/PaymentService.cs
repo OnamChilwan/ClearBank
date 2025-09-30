@@ -39,7 +39,7 @@ public class PaymentService : IPaymentService
         
         _paymentStrategyFactory = new PaymentStrategyFactory(new List<IPaymentStrategy>
         {
-            new BACsStrategy(),
+            new BacsStrategy(),
             new FasterPaymentStrategy(),
             new ChapsPaymentStrategy()
         });
@@ -49,8 +49,7 @@ public class PaymentService : IPaymentService
     {
         var dataStoreType = _paymentConfiguration.DataStoreType;
         var dataStore = _dataStoreFactory.Get(dataStoreType);
-
-        Account account = dataStore.GetAccount(request.DebtorAccountNumber);
+        var account = dataStore.GetAccount(request.DebtorAccountNumber);
 
         if (account == null)
         {

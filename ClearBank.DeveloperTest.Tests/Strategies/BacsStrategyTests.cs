@@ -5,9 +5,9 @@ using NUnit.Framework;
 
 namespace ClearBank.DeveloperTest.Tests.Strategies;
 
-public class BaCsStrategyTests
+public class BacsStrategyTests
 {
-    private readonly BACsStrategy _subject = new();
+    private readonly BacsStrategy _subject = new();
 
     [Test]
     public void Strategy_Should_Support_Bacs()
