@@ -10,11 +10,7 @@ public class ChapsPaymentStrategy : IPaymentStrategy
     {
         var result = MakePaymentResult.Successful();
         
-        if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Chaps))
-        {
-            result.Success = false;
-        }
-        else if (account.Status != AccountStatus.Live)
+        if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Chaps) || account.Status != AccountStatus.Live)
         {
             result.Success = false;
         }
