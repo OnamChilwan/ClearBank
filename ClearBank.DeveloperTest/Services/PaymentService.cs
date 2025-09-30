@@ -57,22 +57,8 @@ public class PaymentService : IPaymentService
             return MakePaymentResult.Unsuccessful();
         }
 
-        var result = MakePaymentResult.Successful();
- 
-        switch (request.PaymentScheme) // TODO: Factory create specific type (strategy)
-        {
-            case PaymentScheme.Bacs:
-                result = new BACsStrategy().MakePayment(account, request);
-                break;
-        
-            case PaymentScheme.FasterPayments:
-                result = new FasterPaymentStrategy().MakePayment(account, request);
-                break;
-        
-            case PaymentScheme.Chaps:
-                result = new ChapsPaymentStrategy().MakePayment(account, request);
-                break;
-        }
+        var strategy = _paymentStrategyFactory.Get(request.PaymentScheme);
+        var result = strategy.MakePayment(account, request);
 
         if (result.Success)
         {

@@ -43,9 +43,34 @@ public class PaymentServiceTests
     }
 
     [TestCaseSource(typeof(TestCases))]
-    public void Given_Account_Exists_When_Making_Payment_Then_Correct_Payment_Strategy_Is_Used(Account account, PaymentScheme scheme, bool expectedResult)
+    public void Given_Account_Exists_When_Making_Unsuccessful_Payment_Then_Correct_Payment_Strategy_Is_Used(Account account, PaymentScheme scheme)
     {
         var request = new MakePaymentRequest { DebtorAccountNumber = "123", PaymentScheme = scheme };
+        var strategy = Substitute.For<IPaymentStrategy>();
+
+        _accountStore
+            .GetAccount(request.DebtorAccountNumber)
+            .Returns(account);
+
+        _paymentStrategyFactory
+            .Get(request.PaymentScheme)
+            .Returns(strategy);
+
+        strategy
+            .MakePayment(account, request)
+            .Returns(MakePaymentResult.Unsuccessful());
+
+        var result = _subject.MakePayment(request);
+        
+        result.Success.Should().BeFalse();
+        
+        strategy.Received(1).MakePayment(account, request);
+    }
+    
+    [TestCaseSource(typeof(TestCases))]
+    public void Given_Account_Exists_When_Making_Successful_Payment_Then_Correct_Payment_Strategy_Is_Used_And_Account_Balance_Is_Updated(Account account, PaymentScheme scheme)
+    {
+        var request = new MakePaymentRequest { DebtorAccountNumber = "123", PaymentScheme = scheme, Amount = 50.5M };
         var strategy = Substitute.For<IPaymentStrategy>();
 
         _accountStore
@@ -58,22 +83,42 @@ public class PaymentServiceTests
         
         strategy
             .MakePayment(account, request)
-            .Returns(MakePaymentResult.Unsuccessful());
+            .Returns(MakePaymentResult.Successful());
 
         var result = _subject.MakePayment(request);
         
-        result.Success.Should().BeFalse();
+        result.Success.Should().BeTrue();
         
         strategy.Received(1).MakePayment(account, request);
+        
+        _accountStore
+            .Received(1)
+            .UpdateAccount(Arg.Is<Account>(x =>
+                x.AllowedPaymentSchemes == account.AllowedPaymentSchemes && 
+                x.Balance == 49.50M &&
+                x.Status == account.Status &&
+                x.AccountNumber == account.AccountNumber));
     }
     
     public class TestCases : IEnumerable
     {
         public IEnumerator GetEnumerator()
         {
-            yield return new object[] { new Account(), PaymentScheme.Bacs, false };
-            yield return new object[] { new Account(), PaymentScheme.FasterPayments, false };
-            yield return new object[] { new Account(), PaymentScheme.Chaps, false };
+            yield return new object[]
+            {
+                new Account { Balance = 100, AllowedPaymentSchemes = AllowedPaymentSchemes.Bacs, AccountNumber = "123", Status = AccountStatus.Live }, 
+                PaymentScheme.Bacs
+            };
+            yield return new object[]
+            {
+                new Account { Balance = 100, AllowedPaymentSchemes = AllowedPaymentSchemes.FasterPayments, AccountNumber = "123", Status = AccountStatus.InboundPaymentsOnly }, 
+                PaymentScheme.FasterPayments
+            };
+            yield return new object[]
+            {
+                new Account { Balance = 100, AllowedPaymentSchemes = AllowedPaymentSchemes.Chaps, AccountNumber = "123", Status = AccountStatus.Disabled }, 
+                PaymentScheme.Chaps
+            };
         }
     }
 }
