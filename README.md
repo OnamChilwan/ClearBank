@@ -53,6 +53,14 @@ You can run tests for each project individually or all together.
 
 ![dotnet_test](dotnet_test.gif)
 
+## What I Changed
+I started by injecting dependencies into the PaymentService constructor to make it testable. I also introduced a `PaymentConfiguration` class to 
+encapsulate the data store type. This allowed me to inject the data store type into the `PaymentService` constructor, making it easier to test and maintain. After doing
+this I was able to introduce a new interface for the data store `IAccountDataStore` and have the data stores implement this so I can inject them into the `PaymentService`
+and verify they were being called. To eliminate the conditional statement I introduced a factory which would return the correct data store based on the configuration. Having
+achieved code coverage I added component tests to verify the service was working as expected in a sociable manner to which then I was free to refactor the code and introduce
+another factory and adopt a strategy pattern.
+
 ## Approach
 - Initially, start by identifying I/O calls and inject them in via a new constructor.
 - Keep the default constructor to maintain backwards compatibility with existing usage.
