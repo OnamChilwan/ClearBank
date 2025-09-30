@@ -8,20 +8,13 @@ public class FasterPaymentStrategy : IPaymentStrategy
 
     public MakePaymentResult MakePayment(Account account, MakePaymentRequest request)
     {
-        var result = new MakePaymentResult
-        {
-            Success = true
-        };
+        var result = MakePaymentResult.Successful();
         
-        if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
+        if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments) || account.Balance < request.Amount)
         {
             result.Success = false;
         }
-        else if (account.Balance < request.Amount)
-        {
-            result.Success = false;
-        }
-        
+
         return result;
     }
 }
