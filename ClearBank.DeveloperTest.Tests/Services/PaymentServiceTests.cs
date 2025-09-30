@@ -3,6 +3,7 @@ using ClearBank.DeveloperTest.Configuration;
 using ClearBank.DeveloperTest.Data;
 using ClearBank.DeveloperTest.Factories;
 using ClearBank.DeveloperTest.Services;
+using ClearBank.DeveloperTest.Strategies;
 using ClearBank.DeveloperTest.Types;
 using FluentAssertions;
 using NSubstitute;
@@ -14,19 +15,19 @@ public class PaymentServiceTests
 {
     private readonly PaymentService _subject;
     private readonly IAccountDataStore _accountStore = Substitute.For<IAccountDataStore>();
-    private readonly IDataStoreFactory _factory = Substitute.For<IDataStoreFactory>();
+    private readonly IDataStoreFactory _dataStoreFactory = Substitute.For<IDataStoreFactory>();
 
     public PaymentServiceTests()
     {
         const string dataStoreType = "data_store";
         
-        _factory
+        _dataStoreFactory
             .Get(dataStoreType)
             .Returns(_accountStore);
 
         _subject = new PaymentService(
             new PaymentConfiguration { DataStoreType = dataStoreType },
-            _factory);
+            _dataStoreFactory);
     }
 
     [TestCase(PaymentScheme.Bacs)]
@@ -43,7 +44,7 @@ public class PaymentServiceTests
     public void Given_Account_Exists_But_Account_Does_Not_Support_Payment_Scheme_Then_Unsuccessful_Result_Is_Returned(Account account, PaymentScheme scheme, bool expectedResult)
     {
         var request = new MakePaymentRequest { DebtorAccountNumber = "123", PaymentScheme = scheme };
-
+        
         _accountStore
             .GetAccount(request.DebtorAccountNumber)
             .Returns(account);

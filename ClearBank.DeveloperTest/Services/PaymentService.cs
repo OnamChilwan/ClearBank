@@ -48,26 +48,19 @@ public class PaymentService : IPaymentService
         }
 
         var result = MakePaymentResult.Successful();
-            
+ 
         switch (request.PaymentScheme) // TODO: Factory create specific type (strategy)
         {
             case PaymentScheme.Bacs:
                 result = new BACsStrategy().MakePayment(account, request);
                 break;
-
+        
             case PaymentScheme.FasterPayments:
                 result = new FasterPaymentStrategy().MakePayment(account, request);
                 break;
-
+        
             case PaymentScheme.Chaps:
-                if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Chaps))
-                {
-                    result.Success = false;
-                }
-                else if (account.Status != AccountStatus.Live)
-                {
-                    result.Success = false;
-                }
+                result = new ChapsPaymentStrategy().MakePayment(account, request);
                 break;
         }
 
